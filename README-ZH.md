@@ -11,15 +11,15 @@
 ```yaml
 dev_dependencies: 
   json2dart: #最新版本
-  build_runner: ^1.0.0
-  json_serializable: ^2.0.0
+  json_annotation: ^2.4.0
+  json_serializable: ^3.0.0
 ```
 
 ## 使用
 
 1. 在工程根目录下创建一个名为 "jsons" 的目录;
 2. 创建或拷贝Json文件到"jsons" 目录中 ;
-3. 运行 `pub run json2dart` (Dart VM工程)or `flutter packages pub run json2dart`(Flutter中) 命令生成Dart model类，生成的文件默认在"lib/models"目录下
+3. 运行 `pub run json2dart` (Dart VM工程)or `flutter pub run json2dart`(Flutter中) 命令生成Dart model类，生成的文件默认在"lib/models"目录下
 
 ## 例子
 
@@ -161,7 +161,7 @@ pub run json2dart src=json_files  dist=data # 输出目录为 lib/data
 ```dart
 import 'package:json2dart/json2dart.dart';
 void main() {
-  run(['src=jsons']);  //run方法为json2dart暴露的方法；
+  run(['--src=jsons', '--dist=lib/data']);  //run方法为json2dart暴露的方法；
 }
 ```
 

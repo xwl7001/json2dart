@@ -1,8 +1,9 @@
-import 'dart:convert';
+// import 'dart:convert';
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:path/path.dart' as path;
 import 'build_runner.dart' as br;
+import 'model_generator.dart';
 
 const tpl="import 'package:json_annotation/json_annotation.dart';\n%t\npart '%s.g.dart';\n\n@JsonSerializable()\nclass %s {\n    %s();\n\n    %s\n    factory %s.fromJson(Map<String,dynamic> json) => _\$%sFromJson(json);\n    Map<String, dynamic> toJson() => _\$%sToJson(this);\n}\n";
 
@@ -42,34 +43,15 @@ bool walk(String srcDir, String distDir, String tag ) {
       String name=paths.first;
       if(paths.last.toLowerCase()!="json"||name.startsWith("_")) return ;
       if(name.startsWith("_")) return;
-      //下面生成模板
-      var map = json.decode(file.readAsStringSync());
-      //为了避免重复导入相同的包，我们用Set来保存生成的import语句。
-      var set= new Set<String>();
-      StringBuffer attrs= new StringBuffer();
-      (map as Map<String, dynamic>).forEach((key, v) {
-        if(key.startsWith("_")) return ;
-        if(key.startsWith("@")){
-          if(key.startsWith("@import")){
-            set.add(key.substring(1)+" '$v'");
-            return;
-          }
-          attrs.write(key);
-          attrs.write(" ");
-          attrs.write(v);
-          attrs.writeln(";");
-        }else {
-          attrs.write(getType(v, set, name, tag));
-          attrs.write(" ");
-          attrs.write(key);
-          attrs.writeln(";");
-        }
-        attrs.write("    ");
-      });
+      //生成
+      var jsonRawData = file.readAsStringSync();
       String  className=name[0].toUpperCase()+name.substring(1);
-      var dist=format(tpl,[name,className,className,attrs.toString(),
+      final classGenerator = new ModelGenerator(className, true);
+      String dartClassesStr = classGenerator.generateDartClasses(jsonRawData);
+
+      var dist=format(tpl,[name,className,className, dartClassesStr,
       className,className,className]);
-      var _import=set.join(";\r\n");
+      var _import= "";
       _import+=_import.isEmpty?"":";";
       dist=dist.replaceFirst("%t",_import );
       //将生成的模板输出
