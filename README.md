@@ -10,9 +10,11 @@ Gernerating Dart model class from Json file.
 
 ```yaml
 dev_dependencies:
-  json2dart: #latest version
-  build_runner: ^2.4.0
-  json_serializable: ^3.0.0
+  build_runner: any
+  json_serializable: any
+  json2dart:
+    git:
+      url: https://github.com/xwl7001/json2dart.git
 ```
 
 ## Getting Started

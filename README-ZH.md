@@ -10,9 +10,11 @@
 
 ```yaml
 dev_dependencies: 
-  json2dart: #最新版本
-  json_annotation: ^2.4.0
-  json_serializable: ^3.0.0
+  build_runner: any
+  json_serializable: any
+  json2dart:
+    git:
+      url: https://github.com/xwl7001/json2dart.git
 ```
 
 ## 使用
