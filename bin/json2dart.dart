@@ -73,7 +73,7 @@ bool walk(String srcDir, String distDir, String tag ) {
       //生成
       var jsonRawData = file.readAsStringSync();
       String  className= camelCase(name) ;// name[0].toUpperCase()+name.substring(1);
-      final classGenerator = new ModelGenerator(className, true);
+      final classGenerator = new ModelGenerator(className, false);
       String dartClassesStr = classGenerator.generateDartClasses(jsonRawData);
 
       var dist = template.renderString({'className': className, 'classBody': dartClassesStr});
