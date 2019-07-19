@@ -1,12 +1,39 @@
-import 'dart:convert';
+// import 'dart:convert';
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:path/path.dart' as path;
+import 'package:mustache/mustache.dart';
 import 'build_runner.dart' as br;
+import 'model_generator.dart';
 
-const tpl="import 'package:json_annotation/json_annotation.dart';\n%t\npart '%s.g.dart';\n\n@JsonSerializable()\nclass %s {\n    %s();\n\n    %s\n    factory %s.fromJson(Map<String,dynamic> json) => _\$%sFromJson(json);\n    Map<String, dynamic> toJson() => _\$%sToJson(this);\n}\n";
+// const tpl="import 'package:json_annotation/json_annotation.dart';\n%t\npart '%s.g.dart';\n\n@JsonSerializable()\nclass %s {\n    %s();\n\n    %s\n    factory %s.fromJson(Map<String,dynamic> json) => _\$%sFromJson(json);\n    Map<String, dynamic> toJson() => _\$%sToJson(this);\n}\n";
+// const tpl="""
+// import 'package:json_annotation/json_annotation.dart';
+// %t
+// part '%s.g.dart';
 
-void main(List<String> args) {
+// @JsonSerializable()
+// class %s {
+//     %s();
+
+//     %s
+//     factory %s.fromJson(Map<String,dynamic> json) => _\$%sFromJson(json);
+//     Map<String, dynamic> toJson() => _\$%sToJson(this);
+// }
+// """;
+
+const tplSource="""
+import 'package:json_annotation/json_annotation.dart';
+
+//part '{{&className}}.g.dart';
+
+@JsonSerializable()
+{{&classBody}}
+""";
+
+var template = new Template(tplSource, name: 'template-class.html');
+
+void run(List<String> args) {
   String src;
   String dist;
   String tag;
@@ -15,9 +42,7 @@ void main(List<String> args) {
   parser.addOption('dist', defaultsTo: 'lib/models', callback: (v) => dist = v, help: "Specify the dist directory.");
   parser.addOption('tag', defaultsTo: '\$', callback: (v) => tag = v, help: "Specify the tag ");
   parser.parse(args);
-  print(args);
   if(walk(src, dist,tag)) {
-    //br.run(['clean']);
     br.run(['build', '--delete-conflicting-outputs']);
   }
 }
@@ -44,40 +69,18 @@ bool walk(String srcDir, String distDir, String tag ) {
       String name=paths.first;
       if(paths.last.toLowerCase()!="json"||name.startsWith("_")) return ;
       if(name.startsWith("_")) return;
-      //下面生成模板
-      var map = json.decode(file.readAsStringSync());
-      //为了避免重复导入相同的包，我们用Set来保存生成的import语句。
-      var set= new Set<String>();
-      StringBuffer attrs= new StringBuffer();
-      (map as Map<String, dynamic>).forEach((key, v) {
-        if(key.startsWith("_")) return ;
-        if(key.startsWith("@")){
-          if(key.startsWith("@import")){
-            set.add(key.substring(1)+" '$v'");
-            return;
-          }
-          attrs.write(key);
-          attrs.write(" ");
-          attrs.write(v);
-          attrs.writeln(";");
-        }else {
-          attrs.write(getType(v, set, name, tag));
-          attrs.write(" ");
-          attrs.write(key);
-          attrs.writeln(";");
-        }
-        attrs.write("    ");
-      });
+      //生成
+      var jsonRawData = file.readAsStringSync();
       String  className=name[0].toUpperCase()+name.substring(1);
-      var dist=format(tpl,[name,className,className,attrs.toString(),
-      className,className,className]);
-      var _import=set.join(";\r\n");
-      _import+=_import.isEmpty?"":";";
-      dist=dist.replaceFirst("%t",_import );
+      final classGenerator = new ModelGenerator(className, true);
+      String dartClassesStr = classGenerator.generateDartClasses(jsonRawData);
+
+      var dist = template.renderString({'className': className, 'classBody': dartClassesStr});
       //将生成的模板输出
       var p=f.path.replaceFirst(srcDir, distDir).replaceFirst(".json", ".dart");
       File(p)..createSync(recursive: true)..writeAsStringSync(dist);
       var relative=p.replaceFirst(distDir+path.separator, "");
+      relative = relative.replaceAll('\\', '/');
       indexFile+="export '$relative' ; \n";
     }
   });
@@ -127,21 +130,4 @@ String getType(v,Set<String> set,String current, tag){
   }else{
     return "String";
   }
-}
-
-//替换模板占位符
-String format(String fmt, List<Object> params) {
-  int matchIndex = 0;
-  String replace(Match m) {
-    if (matchIndex < params.length) {
-      switch (m[0]) {
-        case "%s":
-          return params[matchIndex++].toString();
-      }
-    } else {
-      throw new Exception("Missing parameter for string format");
-    }
-    throw new Exception("Invalid format string: " + m[0].toString());
-  }
-  return fmt.replaceAllMapped("%s", replace);
 }
