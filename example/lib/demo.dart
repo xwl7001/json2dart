@@ -1,4 +1,4 @@
-//import 'package:json_model/json_model.dart';
+//import 'package:json2dart/json2dart.dart';
 import 'models/index.dart';
 
 void main() {

@@ -2,7 +2,7 @@
 语言: [English](README.md) | [中文简体](README-ZH.md)
 
 
-# json_model [![Pub](https://img.shields.io/pub/v/json_model.svg?style=flat-square)](https://pub.dartlang.org/packages/json_model)
+# json2dart [![Pub](https://img.shields.io/pub/v/json2dart.svg?style=flat-square)](https://pub.dartlang.org/packages/json2dart)
 
 只用一行命令，直接将Json文件转为Dart model类。
 
@@ -10,7 +10,7 @@
 
 ```yaml
 dev_dependencies: 
-  json_model: #最新版本
+  json2dart: #最新版本
   build_runner: ^1.0.0
   json_serializable: ^2.0.0
 ```
@@ -19,7 +19,7 @@ dev_dependencies:
 
 1. 在工程根目录下创建一个名为 "jsons" 的目录;
 2. 创建或拷贝Json文件到"jsons" 目录中 ;
-3. 运行 `pub run json_model` (Dart VM工程)or `flutter packages pub run json_model`(Flutter中) 命令生成Dart model类，生成的文件默认在"lib/models"目录下
+3. 运行 `pub run json2dart` (Dart VM工程)or `flutter packages pub run json2dart`(Flutter中) 命令生成Dart model类，生成的文件默认在"lib/models"目录下
 
 ## 例子
 
@@ -136,32 +136,32 @@ class User {
 }
 ```
 
-更完整的示例请移步[这里](https://github.com/flutterchina/json_model/tree/master/example) .
+更完整的示例请移步[这里](https://github.com/flutterchina/json2dart/tree/master/example) .
 
 ##  命令参数
 
 默认的源json文件目录为根目录下名为 "json" 的目录；可以通过 `src` 参数自定义源json文件目录，例如:
 
 ```shell
-pub run json_model src=json_files 
+pub run json2dart src=json_files 
 ```
 
 默认的生成目录为"lib/models"，同样也可以通过`dist` 参数来自定义输出目录:
 
 ```shell
-pub run json_model src=json_files  dist=data # 输出目录为 lib/data
+pub run json2dart src=json_files  dist=data # 输出目录为 lib/data
 ```
 
 > 注意，dist会默认已lib为根目录。
 
 ## 代码调用
 
-如果您正在开发一个工具，想在代码中使用json_model，此时便不能通过命令行来调用json_model，这是你可以通过代码调用：
+如果您正在开发一个工具，想在代码中使用json2dart，此时便不能通过命令行来调用json2dart，这是你可以通过代码调用：
 
 ```dart
-import 'package:json_model/json_model.dart';
+import 'package:json2dart/json2dart.dart';
 void main() {
-  run(['src=jsons']);  //run方法为json_model暴露的方法；
+  run(['src=jsons']);  //run方法为json2dart暴露的方法；
 }
 ```
 

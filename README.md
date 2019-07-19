@@ -2,7 +2,7 @@
 Language: [English](README.md) | [中文简体](README-ZH.md)
 
 
-# json_model [![Pub](https://img.shields.io/pub/v/json_model.svg?style=flat-square)](https://pub.dartlang.org/packages/json_model)
+# json2dart [![Pub](https://img.shields.io/pub/v/json2dart.svg?style=flat-square)](https://pub.dartlang.org/packages/json2dart)
 
 Gernerating Dart model class from Json file.
 
@@ -10,7 +10,7 @@ Gernerating Dart model class from Json file.
 
 ```yaml
 dev_dependencies:
-  json_model: #latest version
+  json2dart: #latest version
   build_runner: ^1.0.0
   json_serializable: ^2.0.0
 ```
@@ -19,7 +19,7 @@ dev_dependencies:
 
 1. Create a "jsons" directory in the root of your project;
 2. Create a Json file under "jsons" dir ;
-3. Run `flutter packages pub run json_model` (in Flutter) or  `pub run json_model`  (in Dart VM)
+3. Run `flutter packages pub run json2dart` (in Flutter) or  `pub run json2dart`  (in Dart VM)
 
 ## Examples
 
@@ -35,7 +35,7 @@ File: `jsons/user.json`
 }
 ```
 
-Run `pub run json_model`, then  you'll see the generated json file under  `lib/models/` dir:
+Run `pub run json2dart`, then  you'll see the generated json file under  `lib/models/` dir:
 
 ```dart
 import 'package:json_annotation/json_annotation.dart';
@@ -132,30 +132,30 @@ class User {
 }
 ```
 
-For completed examples see [here](https://github.com/flutterchina/json_model/tree/master/example) .
+For completed examples see [here](https://github.com/flutterchina/json2dart/tree/master/example) .
 
 ##  Command arguments
 
 The default json source file directory is ` project_root/jsons`;  you can custom the src file directory by `src` argument, for example:
 
 ```shell
-pub run json_model src=json_files 
+pub run json2dart src=json_files 
 ```
 
 You can also custom the dist directory by `dist` argument:
 
 ```shell
-pub run json_model src=json_files  dist=data # will save in lib/data dir
+pub run json2dart src=json_files  dist=data # will save in lib/data dir
 ```
 
 > The `dist` root is `lib`
 
 ## Run by code
 
-If you want to run json_model by code instead command line, you can:
+If you want to run json2dart by code instead command line, you can:
 
 ```dart
-import 'package:json_model/json_model.dart';
+import 'package:json2dart/json2dart.dart';
 void main() {
   run(['src=jsons']);  //run
 }
