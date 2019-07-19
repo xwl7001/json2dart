@@ -2,10 +2,36 @@
 import 'dart:io';
 import 'package:args/args.dart';
 import 'package:path/path.dart' as path;
+import 'package:mustache/mustache.dart';
 import 'build_runner.dart' as br;
 import 'model_generator.dart';
 
-const tpl="import 'package:json_annotation/json_annotation.dart';\n%t\npart '%s.g.dart';\n\n@JsonSerializable()\nclass %s {\n    %s();\n\n    %s\n    factory %s.fromJson(Map<String,dynamic> json) => _\$%sFromJson(json);\n    Map<String, dynamic> toJson() => _\$%sToJson(this);\n}\n";
+// const tpl="import 'package:json_annotation/json_annotation.dart';\n%t\npart '%s.g.dart';\n\n@JsonSerializable()\nclass %s {\n    %s();\n\n    %s\n    factory %s.fromJson(Map<String,dynamic> json) => _\$%sFromJson(json);\n    Map<String, dynamic> toJson() => _\$%sToJson(this);\n}\n";
+// const tpl="""
+// import 'package:json_annotation/json_annotation.dart';
+// %t
+// part '%s.g.dart';
+
+// @JsonSerializable()
+// class %s {
+//     %s();
+
+//     %s
+//     factory %s.fromJson(Map<String,dynamic> json) => _\$%sFromJson(json);
+//     Map<String, dynamic> toJson() => _\$%sToJson(this);
+// }
+// """;
+
+const tplSource="""
+import 'package:json_annotation/json_annotation.dart';
+
+//part '{{&className}}.g.dart';
+
+@JsonSerializable()
+{{&classBody}}
+""";
+
+var template = new Template(tplSource, name: 'template-class.html');
 
 void run(List<String> args) {
   String src;
@@ -49,15 +75,12 @@ bool walk(String srcDir, String distDir, String tag ) {
       final classGenerator = new ModelGenerator(className, true);
       String dartClassesStr = classGenerator.generateDartClasses(jsonRawData);
 
-      var dist=format(tpl,[name,className,className, dartClassesStr,
-      className,className,className]);
-      var _import= "";
-      _import+=_import.isEmpty?"":";";
-      dist=dist.replaceFirst("%t",_import );
+      var dist = template.renderString({'className': className, 'classBody': dartClassesStr});
       //将生成的模板输出
       var p=f.path.replaceFirst(srcDir, distDir).replaceFirst(".json", ".dart");
       File(p)..createSync(recursive: true)..writeAsStringSync(dist);
       var relative=p.replaceFirst(distDir+path.separator, "");
+      relative = relative.replaceAll('\\', '/');
       indexFile+="export '$relative' ; \n";
     }
   });
@@ -107,21 +130,4 @@ String getType(v,Set<String> set,String current, tag){
   }else{
     return "String";
   }
-}
-
-//替换模板占位符
-String format(String fmt, List<Object> params) {
-  int matchIndex = 0;
-  String replace(Match m) {
-    if (matchIndex < params.length) {
-      switch (m[0]) {
-        case "%s":
-          return params[matchIndex++].toString();
-      }
-    } else {
-      throw new Exception("Missing parameter for string format");
-    }
-    throw new Exception("Invalid format string: " + m[0].toString());
-  }
-  return fmt.replaceAllMapped("%s", replace);
 }

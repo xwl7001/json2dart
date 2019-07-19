@@ -21,5 +21,7 @@ dependencies:
   build_runner: ^1.6.1
   json_annotation: ^2.4.0
   json_serializable: ^3.0.0
+  mustache: ^1.1.1
+
 dev_dependencies:
   test: ^1.5.1
