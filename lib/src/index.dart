@@ -5,6 +5,7 @@ import 'package:path/path.dart' as path;
 import 'package:mustache/mustache.dart';
 import 'build_runner.dart' as br;
 import 'model_generator.dart';
+import 'helpers.dart';
 
 // const tpl="import 'package:json_annotation/json_annotation.dart';\n%t\npart '%s.g.dart';\n\n@JsonSerializable()\nclass %s {\n    %s();\n\n    %s\n    factory %s.fromJson(Map<String,dynamic> json) => _\$%sFromJson(json);\n    Map<String, dynamic> toJson() => _\$%sToJson(this);\n}\n";
 // const tpl="""
@@ -71,7 +72,7 @@ bool walk(String srcDir, String distDir, String tag ) {
       if(name.startsWith("_")) return;
       //生成
       var jsonRawData = file.readAsStringSync();
-      String  className=name[0].toUpperCase()+name.substring(1);
+      String  className= camelCase(name) ;// name[0].toUpperCase()+name.substring(1);
       final classGenerator = new ModelGenerator(className, true);
       String dartClassesStr = classGenerator.generateDartClasses(jsonRawData);
 
