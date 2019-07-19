@@ -11,15 +11,15 @@ Gernerating Dart model class from Json file.
 ```yaml
 dev_dependencies:
   json2dart: #latest version
-  build_runner: ^1.0.0
-  json_serializable: ^2.0.0
+  build_runner: ^2.4.0
+  json_serializable: ^3.0.0
 ```
 
 ## Getting Started
 
 1. Create a "jsons" directory in the root of your project;
 2. Create a Json file under "jsons" dir ;
-3. Run `flutter packages pub run json2dart` (in Flutter) or  `pub run json2dart`  (in Dart VM)
+3. Run `flutter pub run json2dart` (in Flutter) or  `pub run json2dart`  (in Dart VM)
 
 ## Examples
 
@@ -157,7 +157,7 @@ If you want to run json2dart by code instead command line, you can:
 ```dart
 import 'package:json2dart/json2dart.dart';
 void main() {
-  run(['src=jsons']);  //run
+  run(['--src=jsons', '--dist=lib/data']);  //run方法为json2dart暴露的方法；
 }
 ```
 
