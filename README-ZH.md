@@ -67,8 +67,6 @@ class User {
 
 ```javascript
 {
-  "@JsonKey(ignore: true) dynamic":"md",
-  "@JsonKey(name: '+1') int": "loved", //将“+1”映射为“loved”
   "name":"wendux",
   "age":20
 }
@@ -83,7 +81,6 @@ part 'user.g.dart';
 @JsonSerializable()
 class User {
     User();
-    @JsonKey(name: '+1') int loved;
     String name;
     num age;
     
@@ -111,8 +108,6 @@ void main() {
 
 ```json
 {
-  "@import":"test_dir/profile.dart",
-  "@JsonKey(ignore: true) Profile":"profile",
   "name":"wendux",
   "age":20
 }
@@ -129,7 +124,6 @@ part 'user.g.dart';
 class User {
     User();
 
-    @JsonKey(ignore: true) Profile profile; //file
     String name;
     num age;
     

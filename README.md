@@ -65,8 +65,6 @@ You can also use “@JsonKey” annotation from [json_annotation](https://pub.de
 
 ```json
 {
-  "@JsonKey(ignore: true) dynamic":"md",
-  "@JsonKey(name: '+1') int": "loved",
   "name":"wendux",
   "age":20
 }
@@ -82,8 +80,6 @@ part 'user.g.dart';
 class User {
     User();
 
-    @JsonKey(ignore: true) dynamic md;
-    @JsonKey(name: '+1') int loved;
     String name;
     num age;
     
@@ -107,8 +103,6 @@ void main() {
 
 ```javascript
 {
-  "@import":"test_dir/profile.dart", //import file for model class
-  "@JsonKey(ignore: true) Profile":"profile",
   "name":"wendux",
   "age":20
 }
@@ -118,14 +112,12 @@ The generated class:
 
 ```dart
 import 'package:json_annotation/json_annotation.dart';
-import 'test_dir/profile.dart';  // import file
 part 'user.g.dart';
 
 @JsonSerializable()
 class User {
     User();
 
-    @JsonKey(ignore: true) Profile profile; //file
     String name;
     num age;
     
