@@ -9,16 +9,16 @@ environment:
 
 dependencies:
   convert: ^2.1.1
-  dart_style: ^1.2.9
+  dart_style: ^1.3.6
   path: ^1.6.2
   args: ^1.5.2
-  build: ^1.1.6
+  build: ^1.3.0
   glob: ^1.1.7
   logging: ^0.11.3+2
   io: ^0.3.3
-  build_resolvers: ^1.3.3
-  build_runner_core: ^4.5.2
-  build_runner: ^1.8.0
+  build_resolvers: ^1.3.11
+  build_runner_core: ^6.0.1
+  build_runner: ^1.10.2
   json_annotation: ^3.0.0
   json_serializable: ^3.0.0
   mustache: ^1.1.1
